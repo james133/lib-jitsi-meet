@@ -40,7 +40,7 @@ const AVAILABLE_DEVICES_POLL_INTERVAL_TIME = 3000; // ms
  * This default is used for old gum flow only, as new gum flow uses
  * {@link DEFAULT_CONSTRAINTS}.
  */
-const OLD_GUM_DEFAULT_RESOLUTION = 720;
+const OLD_GUM_DEFAULT_RESOLUTION = 480;
 
 /**
  * Default devices to obtain when no specific devices are specified. This
@@ -56,8 +56,9 @@ const OLD_GUM_DEFAULT_DEVICES = [ 'audio', 'video' ];
 const DEFAULT_CONSTRAINTS = {
     video: {
         aspectRatio: 16 / 9,
+        frameRate: 15,
         height: {
-            ideal: 720,
+            ideal: 480,
             max: 720,
             min: 240
         }
@@ -936,6 +937,8 @@ class RTCUtils extends Listenable {
     getUserMediaWithConstraints(um, options = {}) {
         const constraints = getConstraints(um, options);
 
+        logger.info('Get media options', options);
+        logger.info('Get media um', um);
         logger.info('Get media constraints', constraints);
 
         return new Promise((resolve, reject) => {
