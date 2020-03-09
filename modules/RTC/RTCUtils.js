@@ -937,9 +937,9 @@ class RTCUtils extends Listenable {
     getUserMediaWithConstraints(um, options = {}) {
         const constraints = getConstraints(um, options);
 
-        logger.info('Get media options', options);
-        logger.info('Get media um', um);
-        logger.info('Get media constraints', constraints);
+        logger.info('Get media options', JSON.stringify(options));
+        logger.info('Get media um', JSON.stringify(um));
+        logger.info('Get media constraints', JSON.stringify(constraints));
 
         return new Promise((resolve, reject) => {
             navigator.mediaDevices.getUserMedia(constraints)
