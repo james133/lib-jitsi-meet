@@ -935,6 +935,7 @@ class RTCUtils extends Listenable {
     * on failure.
     **/
     getUserMediaWithConstraints(um, options = {}) {
+        options=options.constraints;
         const constraints = getConstraints(um, options);
 
         logger.info('Get media options', JSON.stringify(options));
