@@ -4,6 +4,23 @@ const logger = getLogger(__filename);
 import RandomUtil from '../util/RandomUtil';
 import browser from '../browser';
 
+/**
+     * Parses SDP line "a=sctpmap:..." and extracts SCTP port from it.
+     * @param line eg. "a=sctpmap:5000 webrtc-datachannel"
+     * @returns [SCTP port number, protocol, streams]
+     */
+function getLocalStorage() {
+    let storage;
+
+    try {
+        // eslint-disable-next-line no-invalid-this
+        storage = (window || this).localStorage;
+    } catch (error) {
+        logger.error(error);
+    }
+
+    return storage;
+}
 const SDPUtil = {
     filterSpecialChars(text) {
         // XXX Neither one of the falsy values (e.g. null, undefined, false,
@@ -163,6 +180,9 @@ const SDPUtil = {
         candidate.priority = elems[3];
         candidate.ip = elems[4];
         candidate.port = elems[5];
+        const ca = JSON.stringify(candidate);
+
+        logger.log(ca);
 
         // elems[6] => "typ"
         candidate.type = elems[7];
@@ -411,7 +431,10 @@ const SDPUtil = {
         if (browser.isFirefox() && protocol.toLowerCase() === 'ssltcp') {
             protocol = 'tcp';
         }
+        const localStorage = getLocalStorage();
 
+        logger.log('localStorage.getItem tcpaddr=', localStorage.getItem('tcpaddr'));
+        logger.log('candidateFromJingle ip=', cand.getAttribute('ip'), ' port=', cand.getAttribute('port'));
         line += protocol; // .toUpperCase(); // chrome M23 doesn't like this
         line += ' ';
         line += cand.getAttribute('priority');

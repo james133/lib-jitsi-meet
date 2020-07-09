@@ -6,7 +6,18 @@ import Statistics from '../statistics/statistics';
 import GlobalOnErrorHandler from '../util/GlobalOnErrorHandler';
 
 const logger = getLogger(__filename);
+function getLocalStorage() {
+    let storage;
 
+    try {
+        // eslint-disable-next-line no-invalid-this
+        storage = (window || this).localStorage;
+    } catch (error) {
+        logger.error(error);
+    }
+
+    return storage;
+}
 /**
  * Handles a WebRTC RTCPeerConnection or a WebSocket instance to communicate
  * with the videobridge.
@@ -30,11 +41,13 @@ export default class BridgeChannel {
             throw new TypeError(
                 'Just one of peerconnection or wsUrl must be given');
         }
+        const localStorage = getLocalStorage();
+        logger.log("localStorage.getItem tcpaddr=",localStorage.getItem("tcpaddr"));
 
         if (peerconnection) {
-            logger.debug('constructor() with peerconnection');
+            logger.log('constructor() with peerconnection');
         } else {
-            logger.debug(`constructor() with wsUrl:"${wsUrl}"`);
+            logger.log(`constructor() with wsUrl:"${wsUrl}"`);
         }
 
         // The underlying WebRTC RTCDataChannel or WebSocket instance.
